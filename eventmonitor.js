@@ -1,36 +1,36 @@
 var EVENT_MONITOR = {
 	
-	completed: [],
+	completed: [], // holds completed events
+	connectors: {}, // holds active connectors between events and follower actions
+	
+	/* Connectors take the following form:
+		connectors: {
+			'label': {
+				'prereqs': ['a', 'b'],
+				'follower': fn
+			},
+		}
+	*/
 	
 	// Define connectors to bind prerequisite events to follower actions
-	connectors: {
-		'record_page_view': {
-			'prereqs': ['profile_ready', 'pagedata_ready'],
-			'follower': PROFILE.recordPageView
-		},
-		'example_inline': {
-			'prereqs': ['example1', 'example2'],
-			'follower': function () {
-				alert('Just an example!');
-			}
-		}
-	},
-	
 	connect: function (prereq_arr, follower_fn, label) {
 		EVENT_MONITOR.connectors[label] = {'prereqs': prereq_arr, 'follower': follower_fn};
 		console.log('Added event connector: ' + label);
+		console.log('Active connectors: ' + JSON.stringify(EVENT_MONITOR.connectors));
+		EVENT_MONITOR.evaluateEvents();
 	},
 	
 	// Record completion of prerequisite events
 	recordEvent: function (event) {
-	   console.log('Completed ' + event);
+	   console.log('++ Completed ' + event);
 	   EVENT_MONITOR.completed.push(event);
-	   // Reevaluate connectors after each recorded event
+	   // Reevaluate connector states after each recorded event
 	   EVENT_MONITOR.evaluateEvents();
 	},
 	
 	// Check each connector and call follower if all prereqs are completed
 	evaluateEvents: function () {
+		console.log('Completed events: ' + JSON.stringify(EVENT_MONITOR.completed));
 		$.each(EVENT_MONITOR.connectors, function (k, v) {
 			var unsatisfied = [];
 			$.each(v.prereqs, function (i, p) {
