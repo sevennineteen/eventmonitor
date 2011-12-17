@@ -2,7 +2,7 @@
 
 ## Overview
 
-_eventmonitor_ is a simple JavaScript module for managing dependencies asynchronously by allowing functions to be triggered once their defined prereqs have been satisified. 
+**eventmonitor** is a simple JavaScript module for managing dependencies asynchronously by allowing functions to be triggered once their defined prereqs have been satisified. 
 
 This makes it easy to build non-blocking code without complex callback nesting, and also to tie a function's execution to multiple, independent preconditions.
 
