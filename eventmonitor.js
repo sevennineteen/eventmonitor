@@ -8,21 +8,26 @@ var EVENT_MONITOR = {
 		connectors: {
 			'id': {
 				'prereqs': ['a', 'b'],
-				'follower': fn
+				'follower': fn,
+				'args': []
 			},
 		}
 	*/
 	
-	// Logging function
+	// Set EVENT_MONITOR.debug as false to disable console logging
+	debug: true,
 	log: function (msg) {
-		console.log('EVENT_MONITOR>> ' + msg);
+		if (EVENT_MONITOR.debug) {
+			console.log('EVENT_MONITOR>> ' + msg);
+		}
 	},
 	
 	// Define connectors to bind prerequisite events to follower actions
-	connect: function (prereq_arr, follower_fn, label) {
+	connect: function (prereq_arr, follower_fn, args_arr, label) {
 		EVENT_MONITOR.counter += 1;
 		var id = label || EVENT_MONITOR.counter;
-		EVENT_MONITOR.connectors[id] = {'prereqs': prereq_arr, 'follower': follower_fn};
+		var args = args_arr || [];
+		EVENT_MONITOR.connectors[id] = {'prereqs': prereq_arr, 'follower': follower_fn, 'args': args};
 		EVENT_MONITOR.log('Added connector: ' + id);
 		// Reevaluate completion states after connector is added
 		EVENT_MONITOR.evaluateEvents();
@@ -50,7 +55,7 @@ var EVENT_MONITOR = {
 				// Destroy the connector
 				delete EVENT_MONITOR.connectors[k];
 				// Call the follower function
-				v.follower();
+				v.follower.apply(this, v.args);
 			}
 		});
 	}
