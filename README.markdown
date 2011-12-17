@@ -43,17 +43,17 @@ This is somewhat similar to a pub/sub model. However, completed events are reeva
 ## Complete Syntax
 
         // Record event
-        EVENT_MONITOR.recordEvent(event_name);
+        EVENT_MONITOR.recordEvent(event);
         
         // Create connector
-        // EVENT_MONITOR.connect([prereqs_array], follower_fn, [args_array], connector_name);
+        // EVENT_MONITOR.connect([prereq_arr], follower_fn, [args_arr], label);
         
         // Disable logging
         EVENT_MONITOR.debug = false;
 
 ## Notes
 
-1. Any arguments in the `args_array` parameter will be passed to the follower function; this parameter may be omitted if the function does not take arguments.
+1. Any arguments in the `args_arr` parameter will be passed to the follower function; this parameter may be omitted if the function does not take arguments.
 
 2. Connector names are completely optional but may be useful for tracing a certain sequence of events.
 
