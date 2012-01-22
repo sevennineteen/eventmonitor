@@ -49,7 +49,7 @@ This is somewhat similar to a pub/sub model. However, completed events are reeva
         EVENT_MONITOR.connect([prereq_arr], follower_fn, [args_arr], label);
         
         // Directly provide data to event monitor
-        EVENT_MONITOR.provide({data_map});
+        EVENT_MONITOR.provide(key, value);
         
         // Disable logging
         EVENT_MONITOR.debug = false;
