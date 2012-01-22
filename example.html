@@ -1,0 +1,45 @@
+<html>
+<head>
+	<title>EventMonitor Example</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+	<script type="text/javascript" src = "eventmonitor.js"></script>
+</head>
+<body>
+	<h1>EventMonitor Example</h1>
+	
+	<form onsubmit="check_name(this)">
+	  Type your name and click OK.
+	  <input type="text" name="your_name"/>
+	  <input type="submit" value="OK">
+	</form>
+	
+	<script type="text/javascript">
+	  function say_hello (name) {
+	    alert('Hello, ' + name + '!');
+	  }
+	  
+	  // Creating a connector before the event occurs
+	  EVENT_MONITOR.connect(['name_known'], say_hello, ['name']);
+	  
+	  function check_name(form) {
+	    var name = form.your_name.value;
+	    if (name) {
+	      // Announcing an event
+	      EVENT_MONITOR.announce('name_known', {'name': name});
+	      
+	      /* Creating a connector after an event has occurred,
+	       * defining the follower function inline. */
+	      EVENT_MONITOR.connect(['name_known'], function () {
+	        alert("We've been waiting for you!");
+	      });
+	    } else {
+	      // Providing data directly (probably not necessary)
+	      EVENT_MONITOR.provide('name', 'whoever you are');
+	      EVENT_MONITOR.announce('name_known');
+	    }
+	  }
+	</script>
+	
+	
+</body>
+</html>
