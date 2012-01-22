@@ -3,15 +3,16 @@ var EVENT_MONITOR = {
   counter: 0, // counter for assigning connector ids
   completed: [], // holds completed events
   connectors: {}, // holds active connectors between events and follower actions
+  event_data: {}, // holds data provided by events
   
   /* Connectors take the following form:
-    connectors: {
-      'id': {
-        'prereqs': ['a', 'b'],
-        'follower': fn,
-        'args': []
-      },
-    }
+      connectors: {
+        'id': {
+          'prereqs': ['a', 'b'],
+          'follower': fn,
+          'args': []
+        },
+      }
   */
   
   // Set EVENT_MONITOR.debug as false to disable console logging
@@ -34,11 +35,25 @@ var EVENT_MONITOR = {
   },
   
   // Record completion of prerequisite events
-  recordEvent: function (event) {
-     EVENT_MONITOR.log('Completed event: ' + event);
-     EVENT_MONITOR.completed.push(event);
-     // Reevaluate connector states after each recorded event
-     EVENT_MONITOR.evaluateEvents();
+  recordEvent: function (event, data) {
+    EVENT_MONITOR.log('"' + event + '" event occurred.');
+    // add supplied properties to event data
+    for (var prop in data) {
+      EVENT_MONITOR.event_data[prop] = data[prop];
+    }
+    EVENT_MONITOR.log('Current event data: ' + JSON.stringify(EVENT_MONITOR.event_data));
+    EVENT_MONITOR.completed.push(event);
+    // Reevaluate connector states after each recorded event
+    EVENT_MONITOR.evaluateEvents();
+  },
+  
+  // Substitutes args with event data if available
+  inform: function (args) {
+    var new_args = [];
+    for (var k in args) {
+      new_args.push(EVENT_MONITOR.event_data[args[k]] || args[k]);
+    }
+    return new_args;
   },
   
   // Check each connector and call follower if all prereqs are completed
@@ -55,7 +70,7 @@ var EVENT_MONITOR = {
         // Destroy the connector
         delete EVENT_MONITOR.connectors[k];
         // Call the follower function
-        v.follower.apply(this, v.args);
+        v.follower.apply(this, EVENT_MONITOR.inform(v.args));
       }
     });
   }
