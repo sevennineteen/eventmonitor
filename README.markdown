@@ -61,5 +61,3 @@ This is somewhat similar to a pub/sub model. However, completed events are reeva
 2. Although data may be provided to via the `provide` function, it's more useful to send the `data_map` when announcing an event. When a connector's follower function is executed, event monitor will substitute items in the connector's `args_arr` with the latest data which has been provided to it, if available.
 
 3. Connector names are completely optional but may be useful for tracing a certain sequence of events.
-
-4. Requires [JQuery](http://jquery.com).

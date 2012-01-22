@@ -63,20 +63,34 @@ var EVENT_MONITOR = {
   
   // Check each connector and call follower if all prereqs are completed
   decide: function () {
-    $.each(EVENT_MONITOR.connectors, function (k, v) {
+    for (var k in EVENT_MONITOR.connectors) {
       var unsatisfied = [];
-      $.each(v.prereqs, function (i, p) {
-        if ($.inArray(p, EVENT_MONITOR.completed) == -1) {
+      var connector = EVENT_MONITOR.connectors[k];
+      
+      function contains(a, obj) {
+        var i = a.length;
+        while (i--) {
+         if (a[i] === obj) {
+           return true;
+         }
+        }
+        return false;
+      }
+      
+      // Identify unsatisifed prereqs
+      for (var j in connector.prereqs) {
+        var p = connector.prereqs[j];
+        if (!contains(EVENT_MONITOR.completed, p)) {
           unsatisfied.push(p);
         }
-      });
+      }
       if (unsatisfied.length == 0) {
         EVENT_MONITOR.log('Prereqs satisfied for: ' + k);
         // Destroy the connector
         delete EVENT_MONITOR.connectors[k];
         // Call the follower function
-        v.follower.apply(this, EVENT_MONITOR.inform(v.args));
+        connector.follower.apply(this, EVENT_MONITOR.inform(connector.args));
       }
-    });
+    }
   }
 };
