@@ -31,20 +31,25 @@ var EVENT_MONITOR = {
     EVENT_MONITOR.connectors[id] = {'prereqs': prereq_arr, 'follower': follower_fn, 'args': args};
     EVENT_MONITOR.log('Added connector: ' + id);
     // Reevaluate completion states after connector is added
-    EVENT_MONITOR.evaluateEvents();
+    EVENT_MONITOR.decide();
   },
   
-  // Record completion of prerequisite events
-  recordEvent: function (event, data) {
+  // Set or update an event data property
+  provide: function(k, v) {
+    EVENT_MONITOR.event_data[k] = v;
+  },
+  
+  // Announce completion of prerequisite events
+  announce: function (event, data) {
     EVENT_MONITOR.log('"' + event + '" event occurred.');
     // add supplied properties to event data
     for (var prop in data) {
-      EVENT_MONITOR.event_data[prop] = data[prop];
+      EVENT_MONITOR.provide(prop, data[prop]);
     }
     EVENT_MONITOR.log('Current event data: ' + JSON.stringify(EVENT_MONITOR.event_data));
     EVENT_MONITOR.completed.push(event);
     // Reevaluate connector states after each recorded event
-    EVENT_MONITOR.evaluateEvents();
+    EVENT_MONITOR.decide();
   },
   
   // Substitutes args with event data if available
@@ -57,7 +62,7 @@ var EVENT_MONITOR = {
   },
   
   // Check each connector and call follower if all prereqs are completed
-  evaluateEvents: function () {
+  decide: function () {
     $.each(EVENT_MONITOR.connectors, function (k, v) {
       var unsatisfied = [];
       $.each(v.prereqs, function (i, p) {
