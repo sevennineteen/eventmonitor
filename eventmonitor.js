@@ -63,19 +63,20 @@ var EVENT_MONITOR = {
   
   // Check each connector and call follower if all prereqs are completed
   decide: function () {
+    
+    function contains(a, obj) {
+      var i = a.length;
+      while (i--) {
+       if (a[i] === obj) {
+         return true;
+       }
+      }
+      return false;
+    }
+    
     for (var k in EVENT_MONITOR.connectors) {
       var unsatisfied = [];
       var connector = EVENT_MONITOR.connectors[k];
-      
-      function contains(a, obj) {
-        var i = a.length;
-        while (i--) {
-         if (a[i] === obj) {
-           return true;
-         }
-        }
-        return false;
-      }
       
       // Identify unsatisifed prereqs
       for (var j in connector.prereqs) {
