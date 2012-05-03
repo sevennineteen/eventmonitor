@@ -15,8 +15,8 @@ var EVENT_MONITOR = {
       }
   */
   
-  // Set EVENT_MONITOR.debug as false to disable console logging
-  debug: true,
+  // Set EVENT_MONITOR.debug as true to enable console logging
+  debug: false,
   log: function (msg) {
     if (EVENT_MONITOR.debug) {
       console.log('EVENT_MONITOR>> ' + msg);

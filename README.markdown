@@ -51,8 +51,8 @@ This is somewhat similar to a pub/sub model. However, completed events are reeva
         // Directly provide data to event monitor
         EVENT_MONITOR.provide(key, value);
         
-        // Disable logging
-        EVENT_MONITOR.debug = false;
+        // Enable logging
+        EVENT_MONITOR.debug = true;
 
 ## Notes
 
